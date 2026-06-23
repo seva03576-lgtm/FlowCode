@@ -25,16 +25,6 @@ const Hero = () => (
     <div className="relative z-10 max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-16 md:pb-20 w-full overflow-hidden">
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
         <div>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] text-[10px] sm:text-xs tracking-wider uppercase mb-6"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
-            Открыты для новых проектов
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
