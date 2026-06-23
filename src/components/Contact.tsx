@@ -183,7 +183,7 @@ const Contact = () => {
             initial={{ opacity: 0, x: 32 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.15 }}
-            className="lg:mt-[110px]"
+            className="lg:mt-[115px]"
 >
             <form
               ref={formRef}
