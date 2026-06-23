@@ -10,7 +10,7 @@ const Cases = () => {
 
   return (
     <section id="cases" className="py-28 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto px-6" ref={ref}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6" ref={ref}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -21,7 +21,7 @@ const Cases = () => {
             <span className="text-[#D4AF37] text-sm uppercase tracking-widest font-semibold">
               Кейсы
             </span>
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mt-3">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mt-3">
               Реальные результаты
             </h2>
           </div>
@@ -43,7 +43,6 @@ const Cases = () => {
           </div>
         </motion.div>
 
-        {}
         <div className="flex gap-3 mb-8 flex-wrap">
           {cases.map((c, i) => (
             <button
@@ -60,7 +59,6 @@ const Cases = () => {
           ))}
         </div>
 
-        {}
         <motion.div
           key={active}
           initial={{ opacity: 0, y: 20 }}
@@ -78,7 +76,7 @@ const Cases = () => {
                 <span className="text-[#D4AF37] text-xs uppercase tracking-widest font-semibold">
                   {cases[active].tag}
                 </span>
-                <h3 className="text-3xl font-bold text-white mt-2 mb-8">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mt-2 mb-6">
                   {cases[active].title}
                 </h3>
                 <div className="space-y-6">
@@ -103,19 +101,21 @@ const Cases = () => {
                 </div>
               </div>
               <div className="flex items-center">
-                <div className="grid grid-cols-3 gap-4 w-full">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 w-full">
                   {cases[active].metrics.map((m, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.1 }}
-                      className="text-center p-5 rounded-2xl border border-white/10 bg-white/[0.03]"
+                      className="text-center p-4 md:p-5 rounded-2xl border border-white/10 bg-white/[0.03] min-h-[120px] flex flex-col justify-center"
                     >
-                      <div className="text-3xl font-bold text-[#D4AF37] mb-1">
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold text-[#D4AF37] mb-1 break-words">
                         {m.value}
                       </div>
-                      <div className="text-gray-500 text-xs">{m.label}</div>
+                      <div className="text-gray-500 text-[11px] sm:text-xs leading-tight break-words">
+                        {m.label}
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -124,7 +124,6 @@ const Cases = () => {
           </div>
         </motion.div>
 
-        {}
         <div className="flex justify-center gap-2 mt-6">
           {cases.map((_, i) => (
             <button
