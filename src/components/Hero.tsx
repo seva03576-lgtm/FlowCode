@@ -22,7 +22,7 @@ const Hero = () => (
       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
     />
 
-    <div className="relative z-10 max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-16 md:pb-20 w-full overflow-hidden">
+    <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 md:pt-28 pb-16 md:pb-20 w-full overflow-hidden">
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
         <div>
           <motion.h1
