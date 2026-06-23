@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { siteData } from "../data";
 
 const Hero = () => (
-  <section
-    id="hero"
-    className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#0a0a0a]"
-  >
+<section
+  id="hero"
+  className="relative min-h-screen flex flex-col justify-center overflow-x-hidden bg-[#0a0a0a]"
+>
     <div
       className="absolute inset-0 opacity-[0.035]"
       style={{
@@ -22,14 +22,14 @@ const Hero = () => (
       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
     />
 
-    <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 w-full">
-      <div className="grid lg:grid-cols-2 gap-20 items-center">
+    <div className="relative z-10 max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-16 md:pb-20 w-full overflow-hidden">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
         <div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] text-xs tracking-wider uppercase mb-8"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] text-[10px] sm:text-xs tracking-wider uppercase mb-6"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
             Открыты для новых проектов
@@ -39,7 +39,7 @@ const Hero = () => (
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl lg:text-[64px] font-bold text-white leading-[1.1] tracking-tight"
+            className="text-[34px] sm:text-[46px] lg:text-[64px] font-bold text-white leading-[1] tracking-tight"
           >
             {siteData.hero.title}
           </motion.h1>
@@ -48,8 +48,7 @@ const Hero = () => (
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="text-5xl lg:text-[64px] font-bold leading-[1.1] tracking-tight mt-1 mb-7"
-            style={{
+            className="text-[34px] sm:text-[46px] lg:text-[64px] font-bold leading-[1] tracking-tight mt-2 mb-5"            style={{
               background: "linear-gradient(135deg, #D4AF37 0%, #F5D87A 50%, #D4AF37 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -62,7 +61,7 @@ const Hero = () => (
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.26 }}
-            className="text-gray-400 text-lg leading-relaxed mb-10 max-w-md"
+            className="text-gray-400 text-base md:text-lg leading-relaxed mb-8 max-w-md"
           >
             {siteData.hero.subtitle}
           </motion.p>
@@ -71,14 +70,14 @@ const Hero = () => (
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.34 }}
-            className="flex flex-wrap gap-4"
+            className="flex flex-col sm:flex-row gap-3"
           >
             <motion.a
               href="#contact"
               onClick={(e) => { e.preventDefault(); document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }); }}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="px-8 py-4 rounded-xl font-semibold text-black text-sm"
+              className="w-full sm:w-auto px-6 py-4 rounded-xl font-semibold text-white text-sm text-center border border-white/15 bg-white/5"
               style={{
                 background: "linear-gradient(135deg, #D4AF37, #F5D87A)",
                 boxShadow: "0 0 40px rgba(212,175,55,0.25)",
@@ -91,7 +90,7 @@ const Hero = () => (
               onClick={(e) => { e.preventDefault(); document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" }); }}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="px-8 py-4 rounded-xl font-semibold text-white text-sm border border-white/15 bg-white/5 hover:bg-white/10 transition-colors duration-300"
+              className="w-full sm:w-auto px-6 py-4 rounded-xl font-semibold text-white text-sm text-center border border-white/15 bg-white/5 hover:bg-white/10 transition-colors duration-300"
             >
               {siteData.hero.secondary}
             </motion.a>
@@ -165,7 +164,7 @@ const Hero = () => (
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-24 pt-10 border-t border-white/8"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-16 md:mt-24 pt-8 md:pt-10 border-t border-white/8"
       >
         {siteData.stats.map((s, i) => (
           <motion.div
@@ -175,7 +174,7 @@ const Hero = () => (
             transition={{ delay: 0.6 + i * 0.08 }}
             className="text-center"
           >
-            <div className="text-3xl font-bold text-[#D4AF37] mb-1">{s.value}</div>
+            <div className="text-2xl md:text-3xl font-bold text-[#D4AF37] mb-1">{s.value}</div>
             <div className="text-gray-600 text-sm">{s.label}</div>
           </motion.div>
         ))}
