@@ -183,8 +183,22 @@ const Contact = () => {
             initial={{ opacity: 0, x: 32 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.15 }}
-            className="-mt-2 lg:-mt-0"
           >
+
+            <div className="mb-8">
+  <span className="text-[#D4AF37] text-xs uppercase tracking-widest font-semibold">
+    Заявка
+  </span>
+
+  <h2 className="text-4xl lg:text-5xl font-bold text-white mt-3 mb-5">
+    Подать заявку
+  </h2>
+
+  <p className="text-gray-500 text-base leading-relaxed">
+    Заполните форму и мы свяжемся с вами.
+  </p>
+</div>
+            
             <form
               ref={formRef}
               onSubmit={handleSubmit}
