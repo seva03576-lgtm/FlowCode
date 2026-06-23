@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 const navLinks = [
   { label: "Услуги", href: "#services" },
@@ -16,156 +16,171 @@ const Header = () => {
   const [active, setActive] = useState("");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
-    const ids = navLinks.map((l) => l.href.replace("#", ""));
+    const sections = navLinks
+      .map((item) => document.querySelector(item.href))
+      .filter(Boolean);
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive("#" + e.target.id);
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(`#${entry.target.id}`);
+          }
         });
       },
-      { threshold: 0.3 }
+      {
+        threshold: 0.35,
+      }
     );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
+
+    sections.forEach((section) => {
+      if (section) observer.observe(section);
     });
+
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = (href: string) => {
+  const scrollToSection = (href: string) => {
     setMenuOpen(false);
-    setTimeout(() => {
-      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
-    }, menuOpen ? 300 : 0);
+
+    const target = document.querySelector(href);
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
     <>
-      <motion.header
-        initial={{ y: -70, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "bg-[#0a0a0a]/85 backdrop-blur-2xl border-b border-white/8" : "bg-transparent"
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/10"
+            : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-          <motion.button
-            onClick={() => scrollTo("#hero")}
-            whileHover={{ scale: 1.04 }}
-            className="flex items-center gap-2.5"
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+          <button
+            onClick={() => scrollToSection("#hero")}
+            className="flex items-center gap-3"
           >
             <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-black font-bold text-xs font-mono"
-              style={{ background: "linear-gradient(135deg, #D4AF37, #F5D87A)" }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-black font-bold text-sm"
+              style={{
+                background:
+                  "linear-gradient(135deg,#D4AF37,#F5D87A)",
+              }}
             >
               FC
             </div>
-            <span className="text-white font-bold font-mono tracking-tight">FlowCode</span>
-          </motion.button>
+
+            <span className="text-white font-bold text-2xl tracking-tight">
+              FlowCode
+            </span>
+          </button>
 
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <button
                 key={link.href}
-                onClick={() => scrollTo(link.href)}
-                className={`relative px-3.5 py-2 rounded-lg text-sm transition-colors duration-200 ${
-                  active === link.href ? "text-[#D4AF37]" : "text-gray-500 hover:text-gray-200"
+                onClick={() => scrollToSection(link.href)}
+                className={`px-4 py-2 rounded-xl text-sm transition-all duration-200 ${
+                  active === link.href
+                    ? "text-[#D4AF37] bg-[#D4AF37]/10"
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
-                {active === link.href && (
-                  <motion.div
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/20"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{link.label}</span>
+                {link.label}
               </button>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
-            <motion.button
-              onClick={() => scrollTo("#contact")}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              className="hidden md:block px-5 py-2.5 rounded-xl font-semibold text-black text-sm"
-              style={{ background: "linear-gradient(135deg, #D4AF37, #F5D87A)" }}
+            <button
+              onClick={() => scrollToSection("#contact")}
+              className="hidden md:flex px-5 py-3 rounded-xl text-sm font-semibold text-black"
+              style={{
+                background:
+                  "linear-gradient(135deg,#D4AF37,#F5D87A)",
+              }}
             >
               Связаться
-            </motion.button>
+            </button>
 
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px]"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="lg:hidden flex flex-col justify-center items-center w-12 h-12"
             >
-              <motion.span
-                animate={menuOpen ? { rotate: 45, y: 7.5 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.25 }}
-                className="block w-5 h-[1.5px] bg-white origin-center"
+              <span
+                className={`block h-[2px] w-8 bg-white transition-all duration-300 ${
+                  menuOpen ? "rotate-45 translate-y-[7px]" : ""
+                }`}
               />
-              <motion.span
-                animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                transition={{ duration: 0.2 }}
-                className="block w-5 h-[1.5px] bg-white"
+
+              <span
+                className={`block h-[2px] w-8 bg-white my-[5px] transition-all duration-300 ${
+                  menuOpen ? "opacity-0" : ""
+                }`}
               />
-              <motion.span
-                animate={menuOpen ? { rotate: -45, y: -7.5 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.25 }}
-                className="block w-5 h-[1.5px] bg-white origin-center"
+
+              <span
+                className={`block h-[2px] w-8 bg-white transition-all duration-300 ${
+                  menuOpen ? "-rotate-45 -translate-y-[7px]" : ""
+                }`}
               />
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, clipPath: "inset(0 0 100% 0)" }}
-            animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
-            exit={{ opacity: 0, y: -10, clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-16 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-2xl border-b border-white/8 lg:hidden"
+      <div
+        className={`fixed top-20 left-0 right-0 z-40 lg:hidden transition-all duration-300 ${
+          menuOpen
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-5 pointer-events-none"
+        }`}
+      >
+        <div className="mx-4 rounded-2xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl p-3">
+          {navLinks.map((link) => (
+            <button
+              key={link.href}
+              onClick={() => scrollToSection(link.href)}
+              className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-colors ${
+                active === link.href
+                  ? "bg-[#D4AF37]/10 text-[#D4AF37]"
+                  : "text-gray-300 hover:bg-white/5"
+              }`}
+            >
+              {link.label}
+            </button>
+          ))}
+
+          <button
+            onClick={() => scrollToSection("#contact")}
+            className="w-full mt-2 py-3 rounded-xl text-sm font-semibold text-black"
+            style={{
+              background:
+                "linear-gradient(135deg,#D4AF37,#F5D87A)",
+            }}
           >
-            <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {navLinks.map((link, i) => (
-                <motion.button
-                  key={link.href}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => scrollTo(link.href)}
-                  className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
-                    active === link.href
-                      ? "text-[#D4AF37] bg-[#D4AF37]/8"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {link.label}
-                </motion.button>
-              ))}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                onClick={() => scrollTo("#contact")}
-                className="mt-2 py-3 rounded-xl font-semibold text-black text-sm"
-                style={{ background: "linear-gradient(135deg, #D4AF37, #F5D87A)" }}
-              >
-                Связаться
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            Связаться
+          </button>
+        </div>
+      </div>
     </>
   );
 };
