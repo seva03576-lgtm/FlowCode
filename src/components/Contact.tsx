@@ -13,120 +13,81 @@ const Contact = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const [status, setStatus] = useState<
-  "idle" |
-  "loading" |
-  "sent" |
-  "error" |
-  "spam" |
-  "short"
->("idle");
+    "idle" | "loading" | "sent" | "error" | "spam" | "short"
+  >("idle");
   const [form, setForm] = useState({ name: "", contact: "", message: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (status === "loading") return;
+    if (status === "loading") return;
 
-  const honey = (
-    document.querySelector('input[name="_honey"]') as HTMLInputElement
-  )?.value;
+    const honey = (
+      document.querySelector('input[name="_honey"]') as HTMLInputElement
+    )?.value;
 
-  if (honey) return;
+    if (honey) return;
 
-  const lastSubmit = localStorage.getItem("flowcode_last_submit");
+    const lastSubmit = localStorage.getItem("flowcode_last_submit");
 
-if (lastSubmit) {
-  const diff = Date.now() - Number(lastSubmit);
+    if (lastSubmit) {
+      const diff = Date.now() - Number(lastSubmit);
 
-  if (diff < 24 * 60 * 60 * 1000) {
-    setStatus("spam");
+      if (diff < 24 * 60 * 60 * 1000) {
+        setStatus("spam");
+        setTimeout(() => setStatus("idle"), 5000);
+        return;
+      }
+    }
 
-    setTimeout(() => {
-      setStatus("idle");
-    }, 5000);
+    if (form.message.trim().length < 10) {
+      setStatus("short");
+      setTimeout(() => setStatus("idle"), 5000);
+      return;
+    }
 
-    return;
-  }
-}
+    setStatus("loading");
 
-if (form.message.trim().length < 10) {
-  setStatus("short");
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: form.name,
+          contact: form.contact,
+          message: form.message,
+        },
+        PUBLIC_KEY
+      );
 
-  setTimeout(() => {
-    setStatus("idle");
-  }, 5000);
+      localStorage.setItem("flowcode_last_submit", Date.now().toString());
+      setStatus("sent");
+      setForm({ name: "", contact: "", message: "" });
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
+  };
 
-  return;
-}
+  const btnLabel = {
+    idle: "Отправить заявку",
+    loading: "Отправляем...",
+    sent: "Отправлено",
+    error: "Ошибка",
+    spam: "Отправить заявку",
+    short: "Отправить заявку",
+  }[status];
 
-if (form.message.trim().length < 10) {
-  setStatus("short");
-
-  setTimeout(() => {
-    setStatus("idle");
-  }, 5000);
-
-  return;
-}
-
-  setStatus("loading");
-
-  try {
-    await emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_ID,
-      {
-        from_name: form.name,
-        contact: form.contact,
-        message: form.message,
-      },
-      PUBLIC_KEY
-    );
-
-    localStorage.setItem(
-      "flowcode_last_submit",
-      Date.now().toString()
-    );
-
-    setStatus("sent");
-
-    setForm({
-      name: "",
-      contact: "",
-      message: "",
-    });
-
-    setTimeout(() => {
-      setStatus("idle");
-    }, 5000);
-  } catch (error) {
-    console.error(error);
-
-    setStatus("error");
-
-    setTimeout(() => {
-      setStatus("idle");
-    }, 5000);
-  }
-};
-
-const btnLabel = {
-  idle: "Отправить заявку",
-  loading: "Отправляем...",
-  sent: "Отправлено",
-  error: "Ошибка",
-  spam: "Отправить заявку",
-  short: "Отправить заявку",
-}[status];
-
-const btnStyle = {
-  idle: "linear-gradient(135deg, #D4AF37, #F5D87A)",
-  loading: "linear-gradient(135deg, #a0845a, #c9a84c)",
-  sent: "linear-gradient(135deg, #4ade80, #22c55e)",
-  error: "linear-gradient(135deg, #f87171, #ef4444)",
-  spam: "linear-gradient(135deg, #f59e0b, #eab308)",
-  short: "linear-gradient(135deg, #f59e0b, #eab308)",
-}[status];
+  const btnStyle = {
+    idle: "linear-gradient(135deg, #D4AF37, #F5D87A)",
+    loading: "linear-gradient(135deg, #a0845a, #c9a84c)",
+    sent: "linear-gradient(135deg, #4ade80, #22c55e)",
+    error: "linear-gradient(135deg, #f87171, #ef4444)",
+    spam: "linear-gradient(135deg, #f59e0b, #eab308)",
+    short: "linear-gradient(135deg, #f59e0b, #eab308)",
+  }[status];
 
   return (
     <section id="contact" className="py-28 bg-[#070707] relative overflow-hidden">
@@ -157,6 +118,7 @@ const btnStyle = {
             </p>
 
             <div className="space-y-3">
+
               <motion.a
                 href={`https://t.me/${siteData.contact.telegram.replace("@", "")}`}
                 target="_blank"
@@ -195,6 +157,25 @@ const btnStyle = {
                   </div>
                 </div>
               </motion.a>
+
+              <motion.a
+                href="tel:+79165420060"
+                whileHover={{ x: 5 }}
+                className="flex items-center gap-4 p-5 rounded-2xl border border-white/8 bg-white/[0.015] hover:border-[#D4AF37]/25 transition-all duration-300"
+              >
+                <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-gray-600 text-xs mb-0.5">Телефон</div>
+                  <div className="text-white text-sm font-medium">
+                    +7 (916) 542-00-60
+                  </div>
+                </div>
+              </motion.a>
+
             </div>
           </motion.div>
 
@@ -284,46 +265,47 @@ const btnStyle = {
               </motion.button>
 
               {status === "sent" && (
-               <motion.p
-                 initial={{ opacity: 0, y: 6 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="text-green-400 text-xs text-center"
-               >
-                 Заявка отправлена. Скоро с вами свяжемся.
-               </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-green-400 text-xs text-center"
+                >
+                  Заявка отправлена. Скоро с вами свяжемся.
+                </motion.p>
               )}
+
               {status === "short" && (
-               <motion.p
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 className="text-red-400 text-sm text-center"
-               >
-                 Опишите задачу минимум в 10 символов
-               </motion.p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-red-400 text-sm text-center"
+                >
+                  Опишите задачу минимум в 10 символов
+                </motion.p>
               )}
 
               {status === "spam" && (
-               <motion.p
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 className="text-yellow-400 text-sm text-center"
-               >
-                 Заявка уже была отправлена. Повторная отправка доступна через 24 часа.
-               </motion.p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-yellow-400 text-sm text-center"
+                >
+                  Заявка уже была отправлена. Повторная отправка доступна через 24 часа.
+                </motion.p>
               )}
 
               {status === "error" && (
-               <motion.p
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 className="text-red-400 text-sm text-center"
-               >
-                 Ошибка отправки. Попробуйте позже.
-               </motion.p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-red-400 text-sm text-center"
+                >
+                  Ошибка отправки. Попробуйте позже.
+                </motion.p>
               )}
-
             </form>
           </motion.div>
+
         </div>
       </div>
     </section>
